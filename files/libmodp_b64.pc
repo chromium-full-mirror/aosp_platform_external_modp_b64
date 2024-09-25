@@ -1,0 +1,7 @@
+Name: modp_b64
+Description: Base64 encoder/decoder library.
+Version:462023
+Requires:
+Requires.private:
+Libs: -lmodp_b64
+Cflags: -I/usr/include/modp_b64
