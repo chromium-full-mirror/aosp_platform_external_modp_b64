@@ -39,7 +39,7 @@ GN_ARGS:=platform_subdir="modp_b64" OS="linux" \
 	 cc="$(TARGET_CC)" ar="$(TARGET_AR)" build_root="$(PKG_BUILD_DIR)/"\
 	 enable_exceptions=false \
 	 cxx="$(TARGET_CXX)" \
-	 libdir="$(STAGING_DIR_ROOT)/usr/lib" sysroot="$(STAGING_DIR)" \
+	 libdir="$(STAGING_DIR_ROOT)/usr/lib" \
          external_cxxflags=$(MODB64_CXXFLAGS) \
 	 external_cflags=$(MODB64_CFLAGS) \
 	 external_cppflags=$(MODB64_CPPFLAGS) \
@@ -64,12 +64,15 @@ define Build/Compile
 endef
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/include
+	$(INSTALL_DIR) $(1)/usr/include/modp_b64
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/modp_b64/modp_b64*.h $(1)/usr/include
+	$(CP) $(PKG_BUILD_DIR)/modp_b64/modp_b64*.h $(1)/usr/include/modp_b64/
 	$(CP) $(PKG_BUILD_DIR)/out/Default/obj/modp_b64/*.pc $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_BUILD_DIR)/out/Default/lib/*.so $(1)/usr/lib/
+endef
+
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/out/Default/lib/*.so $(1)/usr/lib
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
