@@ -13,7 +13,7 @@ define Package/$(PKG_NAME)
   SECTION:=gwifi
   CATEGORY:=Nest WiFi Mesh Solutions
   SUBMENU:=Libs
-  DEPENDS:=+libstdcpp +gn
+  DEPENDS:=+libstdcpp
   TITLE:=Base64 encoder/decoder library
 endef
 
