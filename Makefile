@@ -29,13 +29,12 @@ MODB64_CXXFLAGS:=["-Os","-pipe","-fno-caller-saves","-std=c++17", \
   "-Werror=format-security","-fstack-protector","-Wl,-z","-Wunused-function",\
   "-Wno-error","-fpermissive","-fPIC","-fno-exceptions","-fno-unwind-tables",\
   "-fno-asynchronous-unwind-tables","-Wno-implicit-fallthrough"]
-MODPB64_LDFLAGS:=["-Wl,-O2","-Wl,--as-needed","-Wl,-Bdynamic"]
 
-USE_FLAGS:={fuzzer=false cros_host=true profiling=false tcmalloc=false}
+USE_FLAGS:={fuzzer=false cros_host=false profiling=false tcmalloc=false}
 
 GN_ARGS:=platform_subdir="modp_b64" OS="linux" \
 	 platform2_root="$(BUILD_DIR)" \
-	 sysroot="$(STAGING_DIR)" \
+	 sysroot="$(STAGING_DIR_ROOT)" \
 	 pkg_config="$(STAGING_DIR_HOST)/bin/pkg-config" \
 	 cc="$(TARGET_CC)" ar="$(TARGET_AR)" build_root="$(PKG_BUILD_DIR)/"\
 	 enable_exceptions=false \
@@ -44,7 +43,6 @@ GN_ARGS:=platform_subdir="modp_b64" OS="linux" \
          external_cxxflags=$(MODB64_CXXFLAGS) \
 	 external_cflags=$(MODB64_CFLAGS) \
 	 external_cppflags=$(MODB64_CPPFLAGS) \
-	 external_ldflags=$(MODPB64_LDFLAGS) \
 	 use=$(USE_FLAGS)
 
 define Build/Prepare
@@ -67,13 +65,10 @@ endef
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include/modp_b64
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_BUILD_DIR)/modp_b64/modp_b64*.h $(1)/usr/include/modp_b64/
 	$(CP) $(PKG_BUILD_DIR)/out/Default/obj/modp_b64/*.pc $(1)/usr/lib/pkgconfig
-endef
-
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/out/Default/lib/*.so $(1)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/out/Default/*.a $(1)/usr/lib
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
